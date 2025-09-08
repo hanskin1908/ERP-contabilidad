@@ -42,10 +42,35 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-// Database
-var connectionString = builder.Configuration.GetValue<string>("DB:CONNECTION")
-                       ?? builder.Configuration.GetConnectionString("DefaultConnection")
-                       ?? "Host=localhost;Port=5432;Database=erp;Username=erp;Password=erp";
+// Database (supports Render DATABASE_URL-style)
+string? conn =
+    // explicit env var mapping (DB__CONNECTION -> DB:CONNECTION)
+    builder.Configuration["DB:CONNECTION"]
+    ?? builder.Configuration["DB__CONNECTION"]
+    ?? builder.Configuration["DATABASE_URL"]
+    ?? builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? "Host=localhost;Port=5432;Database=erp;Username=erp;Password=erp";
+
+static string NormalizePgConnection(string raw)
+{
+    if (string.IsNullOrWhiteSpace(raw))
+        throw new ArgumentException("Empty connection string");
+    if (raw.StartsWith("postgres://") || raw.StartsWith("postgresql://"))
+    {
+        var uri = new Uri(raw);
+        var db = uri.LocalPath.Trim('/');
+        var userInfo = uri.UserInfo.Split(':', 2);
+        var user = Uri.UnescapeDataString(userInfo[0]);
+        var pass = userInfo.Length > 1 ? Uri.UnescapeDataString(userInfo[1]) : "";
+        var host = uri.Host;
+        var port = uri.Port <= 0 ? 5432 : uri.Port;
+        // Force SSL for cloud PG providers
+        return $"Host={host};Port={port};Database={db};Username={user};Password={pass};SSL Mode=Require;Trust Server Certificate=true";
+    }
+    return raw;
+}
+
+var connectionString = NormalizePgConnection(conn);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
