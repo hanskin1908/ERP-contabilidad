@@ -1,0 +1,17 @@
+{
+  "builds": [
+    {
+      "src": "web/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "web/dist" }
+    }
+  ],
+  "env": {
+    "VITE_API_BASE": ""
+  },
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
+  ]
+}
+

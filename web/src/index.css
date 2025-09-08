@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: 246 247 249; /* slate-50-ish */
+}
+
+body {
+  @apply bg-slate-50 text-slate-800;
+}
+
+.btn {
+  @apply inline-flex items-center justify-center rounded-md px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+}
+.btn-primary { @apply bg-brand-600 text-white hover:bg-brand-700 focus:ring-brand-600; }
+.btn-secondary { @apply bg-slate-100 text-slate-800 hover:bg-slate-200 focus:ring-slate-300; }
+.btn-danger { @apply bg-red-600 text-white hover:bg-red-700 focus:ring-red-600; }
+
+.card { @apply bg-white rounded-xl shadow-sm border border-slate-200; }
+.card-header { @apply px-4 py-3 border-b border-slate-200 font-semibold; }
+.card-body { @apply p-4; }
+
+.input { @apply block w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500 focus:outline-none; }
+.label { @apply text-sm text-slate-600 mb-1; }
+
+.table { @apply w-full border-collapse text-sm; }
+.table th { @apply text-left bg-slate-100 px-3 py-2 border-b border-slate-200; }
+.table td { @apply px-3 py-2 border-b border-slate-100; }
+.table tr:hover td { @apply bg-slate-50; }
+

@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: erp-api
+    env: docker
+    plan: free
+    dockerfilePath: src/Api/Dockerfile
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: JWT__ISSUER
+        value: erp-render
+      - key: JWT__AUDIENCE
+        value: erp-web
+      - key: JWT__KEY
+        generateValue: true
+      - key: DB__CONNECTION
+        fromDatabase:
+          name: erp-db
+          property: connectionString
+    healthCheckPath: /health
+    autoDeploy: true
+
+databases:
+  - name: erp-db
+    plan: free
+

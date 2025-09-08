@@ -1,0 +1,10 @@
+[build]
+  base = "web"
+  publish = "dist"
+  command = "npm ci && npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Set VITE_API_BASE in Netlify UI to your Render API URL, e.g. https://erp-api.onrender.com/api
+
